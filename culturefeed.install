@@ -113,7 +113,8 @@ function culturefeed_requirements($phase) {
 
     // Raise warning if CultureFeed library versions do not match the required
     // versions defined by the module.
-    $requirements = array_merge($requirements, culturefeed_libraries_requirements());
+    // ... That's what composer.json is for.
+    // $requirements = array_merge($requirements, culturefeed_libraries_requirements());
   }
 
   return $requirements;
