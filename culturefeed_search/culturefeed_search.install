@@ -33,6 +33,12 @@ function culturefeed_search_schema() {
   $schema['culturefeed_search_terms'] = array(
     'description' => 'Terms for the CultuurNet Search API.',
     'fields' => array(
+      'sid' => array(
+        'description' => 'The primary identifier.',
+        'type' => 'serial',
+        'not null' => TRUE,
+        'unsigned' => TRUE,
+      ),
       'tid' => array(
         'description' => 'The primary identifier for a term.',
         'type' => 'varchar',
@@ -105,6 +111,7 @@ function culturefeed_search_schema() {
         'default' => NULL
       ),
     ),
+    'primary key' => array('sid'),
     'indexes' => array(
       'did' => array('did'),
       'tid' => array('tid'),
@@ -170,6 +177,7 @@ function culturefeed_search_schema() {
         'default' => ''
       ),
     ),
+    'primary key' => array('hid', 'cid'),
     'indexes' => array(
       'hid' => array('hid'),
       'cid' => array('cid'),
@@ -242,3 +250,23 @@ function culturefeed_search_update_7008() {
   culturefeed_search_update_7001();
 }
 
+/**
+ * Add the missing primary keys.
+ */
+function culturefeed_search_update_7009() {
+  db_add_field('culturefeed_search_terms', 'sid', array(
+    'description' => 'The primary identifier.',
+    'type' => 'serial',
+    'not null' => TRUE,
+    'unsigned' => TRUE,
+  ), array(
+    'unique keys' => array(
+      'sid_tmp' => array('sid'),
+    ),
+  ));
+
+  db_add_primary_key('culturefeed_search_terms', array('sid'));
+  db_drop_index('culturefeed_search_terms', 'sid_tmp');
+
+  db_add_primary_key('cnapi_headings', array('hid', 'cid'));
+}
